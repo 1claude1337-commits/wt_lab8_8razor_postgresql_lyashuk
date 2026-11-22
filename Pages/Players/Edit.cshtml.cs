@@ -1,41 +1,49 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using wt_lab5_5razor_lyashuk.Models;
-using wt_lab5_5razor_lyashuk.Data;
+using Microsoft.EntityFrameworkCore;
+using wt_lab8_8razor_postgresql_lyashuk.Data;
+using wt_lab8_8razor_postgresql_lyashuk.Models;
 
-namespace wt_lab5_5razor_lyashuk.Pages.Players
+namespace wt_lab8_8razor_postgresql_lyashuk.Pages.Players
 {
     public class EditModel : PageModel
     {
-        [BindProperty]
-        public Player Player { get; set; } = default!;
+        private readonly AppDbContext _context;
 
-        public IActionResult OnGet(int id)
+        public EditModel(AppDbContext context)
         {
-            Player = PlayerStore.Players.FirstOrDefault(p => p.Id == id);
+            _context = context;
+        }
 
-            if (Player == null)
+        [BindProperty]
+        public Player Player { get; set; } = new();
+
+        public async Task<IActionResult> OnGetAsync(int? id)
+        {
+            if (id == null)
             {
                 return NotFound();
             }
+
+            var player = await _context.Players.FindAsync(id);
+            if (player == null)
+            {
+                return NotFound();
+            }
+
+            Player = player;
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            var existingPlayer = PlayerStore.Players.FirstOrDefault(p => p.Id == Player.Id);
-            if (existingPlayer != null)
-            {
-                existingPlayer.Nickname = Player.Nickname;
-                existingPlayer.Role = Player.Role;
-                existingPlayer.Rating = Player.Rating;
-                existingPlayer.IsActive = Player.IsActive;
-            }
+            _context.Attach(Player).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }

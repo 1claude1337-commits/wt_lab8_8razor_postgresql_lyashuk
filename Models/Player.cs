@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace wt_lab5_5razor_lyashuk.Models
+namespace wt_lab8_8razor_postgresql_lyashuk.Models
 {
     public class Player
     {
@@ -17,5 +17,8 @@ namespace wt_lab5_5razor_lyashuk.Models
         public int Rating { get; set; }
 
         public bool IsActive { get; set; }
+
+        [StringLength(500, ErrorMessage = "Описание не должно превышать 500 символов")]
+        public string? Description { get; set; }
     }
 }

@@ -1,29 +1,33 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using wt_lab5_5razor_lyashuk.Data;
-using wt_lab5_5razor_lyashuk.Models;
+using wt_lab8_8razor_postgresql_lyashuk.Data;
+using wt_lab8_8razor_postgresql_lyashuk.Models;
 
-namespace wt_lab5_5razor_lyashuk.Pages.Players
+namespace wt_lab8_8razor_postgresql_lyashuk.Pages.Players
 {
     public class CreateModel : PageModel
     {
+        private readonly AppDbContext _context;
+
+        public CreateModel(AppDbContext context)
+        {
+            _context = context;
+        }
+
         [BindProperty]
         public Player Player { get; set; } = new();
 
         public void OnGet() { }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            Player.Id = PlayerStore.Players.Any() 
-                ? PlayerStore.Players.Max(x => x.Id) + 1 
-                : 1;
-
-            PlayerStore.Players.Add(Player);
+            _context.Players.Add(Player);
+            await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
         }
     }

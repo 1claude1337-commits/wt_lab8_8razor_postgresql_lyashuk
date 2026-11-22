@@ -1,0 +1,19 @@
+@page
+@model wt_lab8_8razor_postgresql_lyashuk.Pages.Players.DeleteModel
+
+<div class="container py-4 col-md-6">
+    <h2 class="fw-bold mb-4 text-danger">Удалить игрока</h2>
+
+    @if (Model.Player != null)
+    {
+        <div class="card shadow-sm p-4 rounded-4">
+            <p class="mb-3">Вы действительно хотите удалить игрока <strong>@Model.Player.Nickname</strong> (@Model.Player.Role, MMR: @Model.Player.Rating)?</p>
+
+            <form method="post" class="d-flex justify-content-between">
+                <input type="hidden" asp-for="Player.Id" />
+                <button type="submit" class="btn btn-danger">Удалить</button>
+                <a asp-page="./Index" class="btn btn-secondary">Отмена</a>
+            </form>
+        </div>
+    }
+</div>

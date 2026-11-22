@@ -1,5 +1,5 @@
 @page
-@model wt_lab5_5razor_lyashuk.Pages.Players.IndexModel
+@model wt_lab8_8razor_postgresql_lyashuk.Pages.Players.IndexModel
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -10,6 +10,20 @@
         <a asp-page="/Players/Create" class="btn btn-primary">Добавить игрока</a>
     </div>
 
+    <form method="get" class="row g-2 mb-4">
+        <div class="col-sm-8 col-md-6">
+            <input type="text"
+                   name="Search"
+                   value="@Model.Search"
+                   class="form-control"
+                   placeholder="Никнейм игрока" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-outline-primary">Найти</button>
+            <a asp-page="./Index" class="btn btn-outline-secondary">Сбросить</a>
+        </div>
+    </form>
+
     <div class="row g-4">
         @foreach (var player in Model.Players)
         {
@@ -19,9 +33,14 @@
                         <span class="badge bg-secondary mb-2">ID: @player.Id</span>
                         <h5 class="card-title">@player.Nickname</h5>
                         <p class="text-muted mb-1">Роль: @player.Role</p>
-                        <p class="fs-5 fw-bold text-success mb-3">MMR: @player.Rating</p>
-                        <a asp-page="/Players/Details" asp-route-id="@player.Id" class="btn btn-outline-primary">Подробнее</a>
+                        <p class="fs-5 fw-bold text-success mb-2">MMR: @player.Rating</p>
+                        @if (!string.IsNullOrWhiteSpace(player.Description))
+                        {
+                            <p class="small text-secondary mb-3">@player.Description</p>
+                        }
+                        <a asp-page="/Players/Details" asp-route-id="@player.Id" class="btn btn-outline-primary btn-sm">Подробнее</a>
                         <a asp-page="/Players/Edit" asp-route-id="@player.Id" class="btn btn-outline-warning btn-sm">Изменить</a>
+                        <a asp-page="/Players/Delete" asp-route-id="@player.Id" class="btn btn-outline-danger btn-sm">Удалить</a>
                     </div>
                 </div>
             </div>
